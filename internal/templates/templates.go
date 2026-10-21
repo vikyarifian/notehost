@@ -17,3 +17,19 @@ func RenderMarkdown(md string) template.HTML {
 }
 
 // html/template limitation: custom functions must be added to FuncMap before parsing template strings
+func InitTemplates() (*template.Template, error) {
+	funcMap := template.FuncMap{
+		"renderMD": RenderMarkdown,
+	}
+
+	tmpl, err := template.New("root").Funcs(funcMap).Parse(HTMLTemplates)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse templates: %w", err)
+	}
+	return tmpl, nil
+}
+
+func Parse() (*template.Template, error) {
+	return InitTemplates()
+}
+
